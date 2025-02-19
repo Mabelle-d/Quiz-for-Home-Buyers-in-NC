@@ -1,47 +1,96 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neighborhood Recommendation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 40px;
+        }
+        #result {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Find Your Recommended Neighborhood</h2>
+    
+    <label for="customId">Enter Your Custom ID:</label>
+    <input type="text" id="customId" placeholder="Enter your ID">
+    <button onclick="getTop1Result()">Get My Recommendation</button>
+    
+    <div id="result"></div>
+
+    <h3>Want the Full List?</h3>
+    <p>Enter your email to receive all 5 recommendations:</p>
+    
+    <input type="email" id="email" placeholder="Enter your email">
+    <button onclick="sendEmail()">Send to My Email</button>
+    
+    <p id="confirmation"></p>
+
     <script>
-        async function fetchTop1() {
-            const userID = document.getElementById("userID").value;
-            if (!userID) {
-                alert("Please enter a valid ID.");
+        const apiUrl = "https://script.google.com/macros/s/AKfycbxnjboCMwXLvOoXENbkSWhw3TqqeAsLpTnkhD4UTRTrODhlyQrT51d3G62sJhgVNaRT/exec";  // Replace this with your Google Apps Script URL
+
+        function getTop1Result() {
+            let customId = document.getElementById("customId").value;
+            if (!customId) {
+                alert("Please enter your Custom ID.");
                 return;
             }
 
-            const response = await fetch(`https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbxmQvE7gyeh9i20X1MyhRkESVuPfAe8UpIDXTi2FPQm6MrbNpphOnuuE22h-ztdp2xQEg/exec/exec?id=${userID}`);
-            const data = await response.json();
-            if (data.top1) {
-                document.getElementById("result").innerText = data.top1;
-                document.getElementById("emailSection").style.display = "block";
-            } else {
-                alert("No result found for this ID.");
-            }
+            fetch(`${apiUrl}?customId=${customId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById("result").innerHTML = `<strong>Top 1 Recommendation:</strong> ${data.neighborhood}`;
+                    } else {
+                        document.getElementById("result").innerHTML = "No data found for this ID.";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching data:", error);
+                    document.getElementById("result").innerHTML = "Error retrieving data.";
+                });
         }
 
-        function submitEmail() {
-            const email = document.getElementById("email").value;
-            const userID = document.getElementById("userID").value;
-            
-            fetch(`https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbxmQvE7gyeh9i20X1MyhRkESVuPfAe8UpIDXTi2FPQm6MrbNpphOnuuE22h-ztdp2xQEg/exec/exec?email=${email}&id=${userID}`)
-                .then(response => response.text())
-                .then(data => alert("Email submitted! You'll receive full recommendations shortly."));
+        function sendEmail() {
+            let customId = document.getElementById("customId").value;
+            let email = document.getElementById("email").value;
+
+            if (!customId || !email) {
+                alert("Please enter both your Custom ID and email.");
+                return;
+            }
+
+            fetch(apiUrl, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ customId: customId, email: email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById("confirmation").innerText = "Full recommendations sent to your email!";
+                } else {
+                    document.getElementById("confirmation").innerText = "Error sending email.";
+                }
+            })
+            .catch(error => {
+                console.error("Error sending email:", error);
+                document.getElementById("confirmation").innerText = "Error processing request.";
+            });
         }
     </script>
-</head>
-<body>
-    <h1>Find Your Top Neighborhood</h1>
-    <input type="text" id="userID" placeholder="Enter your custom ID">
-    <button onclick="fetchTop1()">Get Recommendation</button>
-    
-    <h2>Your Top 1 Recommendation:</h2>
-    <p id="result">...</p>
 
-    <div id="emailSection" style="display:none;">
-        <h2>Want the full list?</h2>
-        <input type="email" id="email" placeholder="Enter your email">
-        <button onclick="submitEmail()">Get Full Recommendations</button>
-    </div>
 </body>
 </html>
