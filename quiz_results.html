@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neighborhood Recommendation</title>
+    <script>
+        async function fetchTop1() {
+            const userID = document.getElementById("userID").value;
+            if (!userID) {
+                alert("Please enter a valid ID.");
+                return;
+            }
+
+            const response = await fetch(`https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbxmQvE7gyeh9i20X1MyhRkESVuPfAe8UpIDXTi2FPQm6MrbNpphOnuuE22h-ztdp2xQEg/exec/exec?id=${userID}`);
+            const data = await response.json();
+            if (data.top1) {
+                document.getElementById("result").innerText = data.top1;
+                document.getElementById("emailSection").style.display = "block";
+            } else {
+                alert("No result found for this ID.");
+            }
+        }
+
+        function submitEmail() {
+            const email = document.getElementById("email").value;
+            const userID = document.getElementById("userID").value;
+            
+            fetch(`https://script.google.com/macros/s/https://script.google.com/macros/s/AKfycbxmQvE7gyeh9i20X1MyhRkESVuPfAe8UpIDXTi2FPQm6MrbNpphOnuuE22h-ztdp2xQEg/exec/exec?email=${email}&id=${userID}`)
+                .then(response => response.text())
+                .then(data => alert("Email submitted! You'll receive full recommendations shortly."));
+        }
+    </script>
+</head>
+<body>
+    <h1>Find Your Top Neighborhood</h1>
+    <input type="text" id="userID" placeholder="Enter your custom ID">
+    <button onclick="fetchTop1()">Get Recommendation</button>
+    
+    <h2>Your Top 1 Recommendation:</h2>
+    <p id="result">...</p>
+
+    <div id="emailSection" style="display:none;">
+        <h2>Want the full list?</h2>
+        <input type="email" id="email" placeholder="Enter your email">
+        <button onclick="submitEmail()">Get Full Recommendations</button>
+    </div>
+</body>
+</html>
