@@ -10,9 +10,10 @@
             text-align: center;
             margin: 40px;
         }
-        #result {
+        #result, #confirmation {
             font-size: 18px;
             margin-top: 20px;
+            color: #333;
         }
         input, button {
             padding: 10px;
@@ -50,48 +51,52 @@
     <p id="confirmation"></p>
 
     <script>
-        const apiUrl = "https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec";  // Replace with your Apps Script Web URL
+        const apiUrl = "https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec";  
 
         function getTop1Result() {
-            let customId = document.getElementById("customId").value;
+            let customId = document.getElementById("customId").value.trim();
             if (!customId) {
                 alert("Please enter your Custom ID.");
                 return;
             }
 
-            fetch(`https://script.google.com/macros/s/AKfycb.../exec?customId=1234&email=test@example.com`)
-  .then(response => response.json())
-  .then(data => console.log("Success:", data))
-  .catch(error => console.error("Error:", error));
-
+            fetch(`${apiUrl}?customId=${encodeURIComponent(customId)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById("result").innerText = `Your recommended neighborhood: ${data.neighborhood}`;
+                    } else {
+                        document.getElementById("result").innerText = "No recommendation found. Please check your Custom ID.";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching recommendation:", error);
+                    document.getElementById("result").innerText = "Error retrieving data.";
+                });
         }
 
         function sendEmail() {
-            let customId = document.getElementById("customId").value;
-            let email = document.getElementById("email").value;
+            let customId = document.getElementById("customId").value.trim();
+            let email = document.getElementById("email").value.trim();
 
             if (!customId || !email) {
                 alert("Please enter both your Custom ID and email.");
                 return;
             }
 
-            fetch(apiUrl, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ customId: customId, email: email })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById("confirmation").innerText = "Full recommendations sent to your email!";
-                } else {
-                    document.getElementById("confirmation").innerText = "Error sending email.";
-                }
-            })
-            .catch(error => {
-                console.error("Error sending email:", error);
-                document.getElementById("confirmation").innerText = "Error processing request.";
-            });
+            fetch(`${apiUrl}?customId=${encodeURIComponent(customId)}&email=${encodeURIComponent(email)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById("confirmation").innerText = "Full recommendations sent to your email!";
+                    } else {
+                        document.getElementById("confirmation").innerText = "Error sending email.";
+                    }
+                })
+                .catch(error => {
+                    console.error("Error sending email:", error);
+                    document.getElementById("confirmation").innerText = "Error processing request.";
+                });
         }
     </script>
 
