@@ -6,6 +6,8 @@
         body {
             text-align: center;
             font-family: Arial, sans-serif;
+            margin-left: 20%;
+            margin-right: 20%;
         }
         .container {
             display: flex;
@@ -36,19 +38,19 @@
         <label for="email">Enter Your Email to Get Full List:</label>
         <input type="email" id="email" />
         
+        <button onclick="submitEmail()">Submit</button>
     </div>
     
     <script>
         function fetchRecommendation() {
             var customId = document.getElementById("customId").value.trim();
-            var email = document.getElementById("email").value.trim();
             
             if (!customId) {
                 alert("Please enter a valid Custom ID.");
                 return;
             }
             
-            fetch("https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec?customId=" + encodeURIComponent(customId) + "&email=" + encodeURIComponent(email))
+            fetch("https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec?customId=" + encodeURIComponent(customId))
                 .then(response => {
                     if (!response.ok) {
                         throw new Error("Network response was not ok");
@@ -66,6 +68,33 @@
                 .catch(error => {
                     console.error("Error fetching recommendation:", error);
                     alert("Failed to fetch recommendation. Please try again later.");
+                });
+        }
+
+        function submitEmail() {
+            var email = document.getElementById("email").value.trim();
+            if (!email) {
+                alert("Please enter a valid email address.");
+                return;
+            }
+            
+            fetch("https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec?email=" + encodeURIComponent(email))
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert("Your full list of recommendations has been sent to your email.");
+                    } else {
+                        alert("No recommendations found for this email.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error submitting email:", error);
+                    alert("Failed to submit email. Please try again later.");
                 });
         }
     </script>
