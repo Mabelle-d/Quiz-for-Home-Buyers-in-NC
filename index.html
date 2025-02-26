@@ -15,14 +15,19 @@
     
     <script>
         function fetchRecommendation() {
-            var customId = document.getElementById("customId").value;
+            var customId = document.getElementById("customId").value.trim(); // Trim spaces
             if (!customId) {
-                alert("Please enter a Custom ID.");
+                alert("Please enter a valid Custom ID.");
                 return;
             }
 
             fetch("https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec?customId=" + encodeURIComponent(customId))
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.success) {
                         document.getElementById("neighborhood").innerText = data.neighborhood || "N/A";
