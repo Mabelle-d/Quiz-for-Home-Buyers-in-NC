@@ -66,10 +66,11 @@
                 if (!response.ok) throw new Error(`Server responded with ${response.status}`);
 
                 const data = await response.json();
+                console.log("API Response:", data);  // 🔍 Logs the full response
 
                 if (data.success) {
                     document.getElementById("result").innerHTML = `
-                        <strong>Your recommended neighborhood:</strong> ${data.neighborhood} <br>
+                        <strong>Your recommended neighborhood:</strong> ${data.neighborhood || "Not Found"} <br>
                         <strong>Description:</strong> ${data.description || "No description available."}
                     `;
                 } else {
@@ -79,37 +80,37 @@
                 console.error("Error fetching recommendation:", error);
                 document.getElementById("result").innerText = "Error retrieving data. Please try again.";
             }
-        }    
-
-        async function getTop1Result() {
-    let customId = document.getElementById("customId").value.trim();
-    if (!customId) {
-        alert("Please enter your Custom ID.");
-        return;
-    }
-
-    try {
-        const response = await fetch(`${apiUrl}?customId=${encodeURIComponent(customId)}`, { method: "GET" });
-
-        if (!response.ok) throw new Error(`Server responded with ${response.status}`);
-
-        const data = await response.json();
-        console.log("API Response:", data);  // 🔍 Logs the full response
-
-        if (data.success) {
-            document.getElementById("result").innerHTML = `
-                <strong>Your recommended neighborhood:</strong> ${data.neighborhood || "Not Found"} <br>
-                <strong>Description:</strong> ${data.description || "No description available."}
-            `;
-        } else {
-            document.getElementById("result").innerText = "No recommendation found. Please check your Custom ID.";
         }
-    } catch (error) {
-        console.error("Error fetching recommendation:", error);
-        document.getElementById("result").innerText = "Error retrieving data. Please try again.";
-    }
-}
 
+        async function sendEmail() {
+            let customId = document.getElementById("customId").value.trim();
+            let email = document.getElementById("email").value.trim();
+
+            if (!customId || !email) {
+                alert("Please enter both your Custom ID and email.");
+                return;
+            }
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ customId: customId, email: email })  
+                });
+
+                const data = await response.json();
+                console.log("Email API Response:", data);  // Debugging log
+
+                if (data.success) {
+                    document.getElementById("confirmation").innerText = "Full recommendations sent to your email!";
+                } else {
+                    document.getElementById("confirmation").innerText = "Error sending email.";
+                }
+            } catch (error) {
+                console.error("Error sending email:", error);
+                document.getElementById("confirmation").innerText = "Error processing request.";
+            }
+        }
     </script>
 
 </body>
