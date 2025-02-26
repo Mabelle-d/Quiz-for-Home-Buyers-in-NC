@@ -5,8 +5,13 @@
 </head>
 <body>
     <h1>Find Your Recommended Neighborhood</h1>
+    
     <label for="customId">Enter Your Custom ID:</label>
     <input type="text" id="customId" />
+    
+    <label for="email">Enter Your Email:</label>
+    <input type="email" id="email" />
+    
     <button onclick="fetchRecommendation()">Get Recommendation</button>
     
     <h2>Recommendation:</h2>
@@ -15,13 +20,15 @@
     
     <script>
         function fetchRecommendation() {
-            var customId = document.getElementById("customId").value.trim(); // Trim spaces
-            if (!customId) {
-                alert("Please enter a valid Custom ID.");
+            var customId = document.getElementById("customId").value.trim();
+            var email = document.getElementById("email").value.trim();
+            
+            if (!customId || !email) {
+                alert("Please enter a valid Custom ID and Email.");
                 return;
             }
-
-            fetch("https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec?customId=" + encodeURIComponent(customId))
+            
+            fetch("https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec?customId=" + encodeURIComponent(customId) + "&email=" + encodeURIComponent(email))
                 .then(response => {
                     if (!response.ok) {
                         throw new Error("Network response was not ok");
@@ -33,7 +40,7 @@
                         document.getElementById("neighborhood").innerText = data.neighborhood || "N/A";
                         document.getElementById("description").innerText = data.description || "No description available.";
                     } else {
-                        alert("No recommendation found for this Custom ID.");
+                        alert("No recommendation found for this Custom ID and Email.");
                     }
                 })
                 .catch(error => {
