@@ -94,7 +94,8 @@
                     if (data.success) {
                         alert("The full recommendation will be sent to your email in a while.");
                     } else {
-                        alert("No recommendations found for this email.");
+                        console.error("Error:", data.message || "Failed to submit email.");
+                        alert("Failed to submit email. Please try again later.");
                     }
                 })
                 .catch(error => {
