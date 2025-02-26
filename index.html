@@ -2,29 +2,49 @@
 <html>
 <head>
     <title>Neighborhood Recommendation</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        input, button {
+            margin: 5px;
+            padding: 10px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Find Your Recommended Neighborhood</h1>
-    
-    <label for="customId">Enter Your Custom ID:</label>
-    <input type="text" id="customId" />
-    
-    <label for="email">Enter Your Email:</label>
-    <input type="email" id="email" />
-    
-    <button onclick="fetchRecommendation()">Get Recommendation</button>
-    
-    <h2>Recommendation:</h2>
-    <p><strong>Neighborhood:</strong> <span id="neighborhood">N/A</span></p>
-    <p><strong>Description:</strong> <span id="description">N/A</span></p>
+    <div class="container">
+        <h1>Find Your Recommended Neighborhood</h1>
+        
+        <label for="customId">Enter Your Custom ID:</label>
+        <input type="text" id="customId" />
+        
+        <button onclick="fetchRecommendation()">Get Recommendation</button>
+        
+        <h2>Recommendation:</h2>
+        <p><strong>Neighborhood:</strong> <span id="neighborhood">N/A</span></p>
+        <p><strong>Description:</strong> <span id="description">N/A</span></p>
+        
+        <label for="email">Enter Your Email to Get Full List:</label>
+        <input type="email" id="email" />
+        
+    </div>
     
     <script>
         function fetchRecommendation() {
             var customId = document.getElementById("customId").value.trim();
             var email = document.getElementById("email").value.trim();
             
-            if (!customId || !email) {
-                alert("Please enter a valid Custom ID and Email.");
+            if (!customId) {
+                alert("Please enter a valid Custom ID.");
                 return;
             }
             
@@ -40,7 +60,7 @@
                         document.getElementById("neighborhood").innerText = data.neighborhood || "N/A";
                         document.getElementById("description").innerText = data.description || "No description available.";
                     } else {
-                        alert("No recommendation found for this Custom ID and Email.");
+                        alert("No recommendation found for this Custom ID.");
                     }
                 })
                 .catch(error => {
