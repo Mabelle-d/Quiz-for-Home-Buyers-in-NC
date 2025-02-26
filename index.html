@@ -51,29 +51,34 @@
     <p id="confirmation"></p>
 
     <script>
-        const apiUrl = "https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec";  
+    const apiUrl = "YOUR_NEW_DEPLOYED_SCRIPT_URL_HERE";  
 
-        function getTop1Result() {
-            let customId = document.getElementById("customId").value.trim();
-            if (!customId) {
-                alert("Please enter your Custom ID.");
-                return;
-            }
-
-            fetch(`${apiUrl}?customId=${encodeURIComponent(customId)}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById("result").innerText = `Your recommended neighborhood: ${data.neighborhood}`;
-                    } else {
-                        document.getElementById("result").innerText = "No recommendation found. Please check your Custom ID.";
-                    }
-                })
-                .catch(error => {
-                    console.error("Error fetching recommendation:", error);
-                    document.getElementById("result").innerText = "Error retrieving data.";
-                });
+    function getTop1Result() {
+        let customId = document.getElementById("customId").value.trim();
+        if (!customId) {
+            alert("Please enter your Custom ID.");
+            return;
         }
+
+        fetch(`${apiUrl}?customId=${encodeURIComponent(customId)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    document.getElementById("result").innerHTML = `
+                        <strong>Your recommended neighborhood:</strong> ${data.neighborhood} <br>
+                        <strong>Description:</strong> ${data.description}
+                    `;
+                } else {
+                    document.getElementById("result").innerText = "No recommendation found. Please check your Custom ID.";
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching recommendation:", error);
+                document.getElementById("result").innerText = "Error retrieving data.";
+            });
+    }
+</script>
+
 
         function sendEmail() {
             let customId = document.getElementById("customId").value.trim();
