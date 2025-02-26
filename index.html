@@ -59,22 +59,11 @@
                 return;
             }
 
-            fetch(`${apiUrl}?customId=${customId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById("result").innerHTML = `
-                            <strong>Top 1 Recommendation:</strong> ${data.neighborhood}<br>
-                            <strong>Description:</strong> ${data.description}
-                        `;
-                    } else {
-                        document.getElementById("result").innerHTML = "No data found for this ID.";
-                    }
-                })
-                .catch(error => {
-                    console.error("Error fetching data:", error);
-                    document.getElementById("result").innerHTML = "Error retrieving data.";
-                });
+            fetch(`https://script.google.com/macros/s/AKfycb.../exec?customId=1234&email=test@example.com`)
+  .then(response => response.json())
+  .then(data => console.log("Success:", data))
+  .catch(error => console.error("Error:", error));
+
         }
 
         function sendEmail() {
