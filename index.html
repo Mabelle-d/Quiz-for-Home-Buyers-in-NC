@@ -67,7 +67,7 @@
                         document.getElementById("neighborhood").innerText = data.neighborhood || "N/A";
                         document.getElementById("description").innerText = data.description || "No description available.";
                     } else {
-                        alert("No recommendation found for this Custom ID.");
+                        alert(data.message || "No recommendation found for this Custom ID.");
                     }
                 })
                 .catch(error => {
@@ -92,10 +92,10 @@
                 })
                 .then(data => {
                     if (data.success) {
-                        alert("The full recommendation will be sent to your email in a while.");
+                        alert(data.message || "The full recommendation will be sent to your email in a while.");
                     } else {
                         console.error("Error:", data.message || "Failed to submit email.");
-                        alert("Failed to submit email. Please try again later.");
+                        alert(data.message || "Failed to submit email. Please try again later.");
                     }
                 })
                 .catch(error => {
