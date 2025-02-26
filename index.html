@@ -1,59 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neighborhood Recommendation</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; margin: 40px; }
-        #result, #confirmation { font-size: 18px; margin-top: 20px; color: #333; }
-        input, button { padding: 10px; margin: 10px; font-size: 16px; }
-        label { font-size: 18px; }
-        h2, h3 { color: #333; }
-        p { font-size: 16px; color: #555; }
-    </style>
 </head>
 <body>
-
-    <h2>Find Your Recommended Neighborhood</h2>
+    <h1>Find Your Recommended Neighborhood</h1>
     <label for="customId">Enter Your Custom ID:</label>
-    <input type="text" id="customId" placeholder="Enter your ID">
-    <button onclick="getTop1Result()">Get My Recommendation</button>
-    <div id="result"></div>
-
-    <h3>Want the Full List?</h3>
-    <p>Enter your email to receive all 5 recommendations:</p>
-    <input type="email" id="email" placeholder="Enter your email">
-    <button onclick="sendEmail()">Send to My Email</button>
-    <p id="confirmation"></p>
-
+    <input type="text" id="customId" />
+    <button onclick="fetchRecommendation()">Get Recommendation</button>
+    
+    <h2>Recommendation:</h2>
+    <p><strong>Neighborhood:</strong> <span id="neighborhood">N/A</span></p>
+    <p><strong>Description:</strong> <span id="description">N/A</span></p>
+    
     <script>
-        const apiUrl = "https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec";
-
-        async function getTop1Result() {
-            let customId = document.getElementById("customId").value.trim();
+        function fetchRecommendation() {
+            var customId = document.getElementById("customId").value;
             if (!customId) {
-                alert("Please enter your Custom ID.");
+                alert("Please enter a Custom ID.");
                 return;
             }
 
-            try {
-                const response = await fetch(`${apiUrl}?customId=${encodeURIComponent(customId)}`, { method: "GET" });
-                const data = await response.json();
-
-                if (data.success) {
-                    document.getElementById("result").innerHTML = `
-                        <strong>Your recommended neighborhood:</strong> ${data.neighborhood} <br>
-                        <strong>Email:</strong> ${data.email}
-                    `;
-                } else {
-                    document.getElementById("result").innerText = "No recommendation found. Please check your Custom ID.";
-                }
-            } catch (error) {
-                document.getElementById("result").innerText = "Error retrieving data. Please try again.";
-            }
+            fetch("https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec?customId=" + encodeURIComponent(customId))
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById("neighborhood").innerText = data.neighborhood || "N/A";
+                        document.getElementById("description").innerText = data.description || "No description available.";
+                    } else {
+                        alert("No recommendation found for this Custom ID.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error fetching recommendation:", error);
+                    alert("Failed to fetch recommendation. Please try again later.");
+                });
         }
     </script>
-
 </body>
 </html>
