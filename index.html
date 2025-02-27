@@ -76,33 +76,33 @@
                 });
         }
 
-        function submitEmail() {
-            var email = document.getElementById("email").value.trim();
-            if (!email) {
-                alert("Please enter a valid email address.");
-                return;
+       function submitEmail() {
+    var email = document.getElementById("email").value.trim();
+    if (!email) {
+        alert("Please enter a valid email address.");
+        return;
+    }
+    
+    fetch("https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec?email=" + encodeURIComponent(email))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
             }
-            
-            fetch("https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec?email=" + encodeURIComponent(email))
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Network response was not ok");
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        alert(data.message || "The full recommendation will be sent to your email in a while.");
-                    } else {
-                        console.error("Error:", data.message || "Failed to submit email.");
-                        alert(data.message || "Failed to submit email. Please try again later.");
-                    }
-                })
-                .catch(error => {
-                    console.error("Error submitting email:", error);
-                    alert("Failed to submit email. Please try again later.");
-                });
-        }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                alert(data.message || "The full recommendation will be sent to your email in a while.");
+            } else {
+                console.error("Error:", data.message || "Failed to submit email.");
+                alert(data.message || "Failed to submit email. Please try again later.");
+            }
+        })
+        .catch(error => {
+            console.error("Error submitting email:", error);
+            alert("Failed to submit email. Please try again later.");
+        });
+}
     </script>
 </body>
 </html>
