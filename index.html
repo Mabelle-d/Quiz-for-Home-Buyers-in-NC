@@ -30,7 +30,7 @@
         <h1>Find Your Recommended Neighborhood</h1>
         
         <label for="customId">Enter Your Custom ID:</label>
-        <input type="text" id="customId" />
+        <input type="text" id="customId" required />
         
         <button onclick="fetchRecommendation()">Get Recommendation</button>
         
@@ -41,7 +41,7 @@
         <div class="spacer"></div>
         
         <label for="email">Enter Your Email to Get Full List:</label>
-        <input type="email" id="email" />
+        <input type="email" id="email" required />
         
         <button onclick="submitEmail()">Submit</button>
     </div>
@@ -76,35 +76,35 @@
                 });
         }
 
-    function submitEmail() {
-    var customId = document.getElementById("customId").value.trim();
-    var email = document.getElementById("email").value.trim();
+        function submitEmail() {
+            var customId = document.getElementById("customId").value.trim();
+            var email = document.getElementById("email").value.trim();
 
-    if (!customId || !email) {
-        alert("Please enter both your Custom ID and Email.");
-        return;
-    }
-    
-    fetch(`https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec?customId=${encodeURIComponent(customId)}&email=${encodeURIComponent(email)}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
+            if (!customId || !email) {
+                alert("Please enter both your Custom ID and Email.");
+                return;
             }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                alert(data.message || "The full recommendation will be sent to your email in a while.");
-            } else {
-                console.error("Error:", data.message || "Failed to submit email.");
-                alert(data.message || "Failed to submit email. Please try again later.");
-            }
-        })
-        .catch(error => {
-            console.error("Error submitting email:", error);
-            alert("Failed to submit email. Please try again later.");
-        });
-}
+            
+            fetch(`https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec?customId=${encodeURIComponent(customId)}&email=${encodeURIComponent(email)}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Network response was not ok");
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        alert(data.message || "The full recommendation will be sent to your email in a while.");
+                    } else {
+                        console.error("Error:", data.message || "Failed to submit email.");
+                        alert(data.message || "Failed to submit email. Please try again later.");
+                    }
+                })
+                .catch(error => {
+                    console.error("Error submitting email:", error);
+                    alert("Failed to submit email. Please try again later.");
+                });
+        }
     </script>
 </body>
 </html>
