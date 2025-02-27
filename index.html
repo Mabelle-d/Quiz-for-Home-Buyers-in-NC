@@ -77,13 +77,15 @@
         }
 
     function submitEmail() {
+    var customId = document.getElementById("customId").value.trim();
     var email = document.getElementById("email").value.trim();
-    if (!email) {
-        alert("Please enter a valid email address.");
+
+    if (!customId || !email) {
+        alert("Please enter both your Custom ID and Email.");
         return;
     }
     
-    fetch("https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec?email=" + encodeURIComponent(email))
+    fetch(`https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec?customId=${encodeURIComponent(customId)}&email=${encodeURIComponent(email)}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error("Network response was not ok");
