@@ -76,35 +76,36 @@
                 });
         }
 
-      function submitEmail() {
-    var customId = document.getElementById("customId").value.trim();
-    var email = document.getElementById("email").value.trim();
+     <script>
+    function submitEmail() {
+        var email = document.getElementById("email").value.trim();
+        var customId = document.getElementById("customId").value.trim();
 
-    if (!customId || !email) {
-        alert("Please enter both your Custom ID and Email.");
-        return;
-    }
-    
-    fetch(`https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec?customId=${encodeURIComponent(customId)}&email=${encodeURIComponent(email)}`)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.json();
+        if (!email) {
+            alert("Please enter a valid email address.");
+            return;
+        }
+        if (!customId) {
+            alert("Please enter your Custom ID before submitting your email.");
+            return;
+        }
+
+        fetch("https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: email, customId: customId })
         })
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert(data.message || "The full recommendation will be sent to your email in a while.");
+                alert("The full recommendation will be sent to your email shortly.");
             } else {
-                console.error("Error:", data.message || "Failed to submit email.");
-                alert(data.message || "Failed to submit email. Please try again later.");
+                alert("Failed to submit your email. Please try again.");
             }
         })
         .catch(error => {
             console.error("Error submitting email:", error);
             alert("Failed to submit email. Please try again later.");
         });
-}
-    </script>
-</body>
-</html>
+    }
+</script>
