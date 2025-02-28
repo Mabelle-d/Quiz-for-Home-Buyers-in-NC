@@ -54,14 +54,9 @@
                 alert("Please enter a valid Custom ID.");
                 return;
             }
-            
+
             fetch("https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec?customId=" + encodeURIComponent(customId))
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error("Network response was not ok");
-                    }
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(data => {
                     if (data.success) {
                         document.getElementById("neighborhood").innerText = data.neighborhood || "N/A";
@@ -76,45 +71,49 @@
                 });
         }
 
-    <script>
-    function getInputValue(id) {
-        return document.getElementById(id).value.trim();
-    }
-
-    function showAlert(message) {
-        alert(message);
-    }
-
-    function sendEmailSubmission(email, customId) {
-        return fetch("https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email: email, customId: customId })
-        })
-        .then(response => response.json());
-    }
-
-    function submitEmail() {
-        var email = getInputValue("email");
-        var customId = getInputValue("customId");
-
-        if (!email) {
-            showAlert("Please enter a valid email address.");
-            return;
-        }
-        if (!customId) {
-            showAlert("Please enter your Custom ID before submitting your email.");
-            return;
+        function getInputValue(id) {
+            return document.getElementById(id).value.trim();
         }
 
-        sendEmailSubmission(email, customId)
-        .then(data => {
-            showAlert(data.success ? "The full recommendation will be sent to your email shortly." : "Failed to submit your email. Please try again.");
-        })
-        .catch(error => {
-            console.error("Error submitting email:", error);
-            showAlert("Failed to submit email. Please try again later.");
-        });
-    }
-</script>
+        function showAlert(message) {
+            alert(message);
+        }
 
+        function isValidEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+
+        function sendEmailSubmission(email, customId) {
+            return fetch("https://script.google.com/macros/s/AKfycbx4lswj156tj0KIlRoDi00N3vW9kTIwrTTDLiI7GEmsKbmKWhTAxbh1cfCEnwrNhAzs/exec", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email: email, customId: customId })
+            })
+            .then(response => response.json());
+        }
+
+        function submitEmail() {
+            var email = getInputValue("email");
+            var customId = getInputValue("customId");
+
+            if (!isValidEmail(email)) {
+                showAlert("Please enter a valid email address.");
+                return;
+            }
+            if (!customId) {
+                showAlert("Please enter your Custom ID before submitting your email.");
+                return;
+            }
+
+            sendEmailSubmission(email, customId)
+            .then(data => {
+                showAlert(data.success ? "The full recommendation will be sent to your email shortly." : "Failed to submit your email. Please try again.");
+            })
+            .catch(error => {
+                console.error("Error submitting email:", error);
+                showAlert("Failed to submit email. Please try again later.");
+            });
+        }
+    </script>
+</body>
+</html>
