@@ -102,10 +102,9 @@
                 return;
             }
 
-            fetch("https://script.google.com/macros/s/AKfycby594NPOb15zl3QlUllARbQcS1M5dveJb0Z_KzyEO8HqTymZFxPX7C2dkW4NuDnI3et/exec", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email: email, customId: customId })
+            fetch("https://script.google.com/macros/s/AKfycby594NPOb15zl3QlUllARbQcS1M5dveJb0Z_KzyEO8HqTymZFxPX7C2dkW4NuDnI3et/exec?customId=" + encodeURIComponent(customId) + "&email=" + encodeURIComponent(email), {
+                method: "GET",
+                mode: "cors"
             })
             .then(response => response.json())
             .then(data => {
