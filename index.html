@@ -55,7 +55,7 @@
                 return;
             }
 
-            fetch("https://script.google.com/macros/s/AKfycbzIzvsCTKN-mAvDfg2Z-ld5O52dv65Gj22yt-8FMYvE-PjB7zIIaZmsf6cSkhgnWfol/exec?customId=" + encodeURIComponent(customId))
+            fetch("https://script.google.com/macros/s/AKfycby594NPOb15zl3QlUllARbQcS1M5dveJb0Z_KzyEO8HqTymZFxPX7C2dkW4NuDnI3et/exec?customId=" + encodeURIComponent(customId))
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
@@ -84,7 +84,7 @@
         }
 
         function sendEmailSubmission(email, customId) {
-            return fetch("https://script.google.com/macros/s/AKfycbzIzvsCTKN-mAvDfg2Z-ld5O52dv65Gj22yt-8FMYvE-PjB7zIIaZmsf6cSkhgnWfol/exec", {
+            return fetch("https://script.google.com/macros/s/AKfycby594NPOb15zl3QlUllARbQcS1M5dveJb0Z_KzyEO8HqTymZFxPX7C2dkW4NuDnI3et/exec", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email: email, customId: customId })
