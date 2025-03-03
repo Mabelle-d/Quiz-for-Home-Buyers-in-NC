@@ -54,40 +54,40 @@
     </div>
     
     <script>
-        function fetchRecommendation() {
-            var customId = document.getElementById("customId").value.trim();
-            if (!customId) {
-                alert("Please enter a valid Custom ID.");
-                return;
-            }
-            
-            document.getElementById("loading").style.display = "block";
-            
-            fetch("https://script.google.com/macros/s/AKfycby594NPOb15zl3QlUllARbQcS1M5dveJb0Z_KzyEO8HqTymZFxPX7C2dkW4NuDnI3et/exec?customId=" + encodeURIComponent(customId), {
-                method: "GET",
-                mode: "cors"
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Network response was not ok");
-                }
-                return response.json();
-            })
-            .then(data => {
-                document.getElementById("loading").style.display = "none";
-                if (data.success) {
-                    document.getElementById("neighborhood").innerText = data.neighborhood || "N/A";
-                    document.getElementById("description").innerText = data.description || "No description available.";
-                } else {
-                    alert(data.message || "No recommendation found for this Custom ID.");
-                }
-            })
-            .catch(error => {
-                console.error("Error fetching recommendation:", error);
-                alert("Failed to fetch recommendation. Please try again later.");
-                document.getElementById("loading").style.display = "none";
-            });
+       function fetchRecommendation() {
+    var customId = document.getElementById("customId").value.trim();
+    if (!customId) {
+        alert("Please enter a valid Custom ID.");
+        return;
+    }
+
+    document.getElementById("loading").style.display = "block";
+
+    fetch("https://script.google.com/macros/s/AKfycby594NPOb15zl3QlUllARbQcS1M5dveJb0Z_KzyEO8HqTymZFxPX7C2dkW4NuDnI3et/exec?customId=" + encodeURIComponent(customId), {
+        method: "GET",
+        mode: "cors"
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
         }
+        return response.json();
+    })
+    .then(data => {
+        document.getElementById("loading").style.display = "none";
+        if (data.success) {
+            document.getElementById("neighborhood").innerText = data.neighborhood || "N/A";
+            document.getElementById("description").innerText = data.description || "No description available.";
+        } else {
+            alert(data.message || "No recommendation found for this Custom ID.");
+        }
+    })
+    .catch(error => {
+        console.error("Error fetching recommendation:", error);
+        alert("Failed to fetch recommendation. Please try again later.");
+        document.getElementById("loading").style.display = "none";
+    });
+}
 
         function submitEmail() {
             var email = document.getElementById("email").value.trim();
