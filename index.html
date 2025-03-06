@@ -68,33 +68,28 @@
     var scriptUrl = "https://script.google.com/macros/s/AKfycbyMIXAInUQO7wYxWSWFmgA6iJpa7Lth-umoCvD0Eiu66MV0EfJe6aUN94mlS-btHHLD/exec?action=getRecommendation&customId=" + encodeURIComponent(customId);
 
     fetch(scriptUrl, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Server returned an error.");
-        }
-        return response.json();
-    })
-    .then(data => {
-        document.getElementById("loading").style.display = "none";
+    method: "GET",
+    headers: {
+        "Content-Type": "application/json"
+    }
+})
+.then(response => response.json())
+.then(data => {
+    document.getElementById("loading").style.display = "none";
+    
+    if (data.success) {
+        document.getElementById("neighborhood").innerText = data.neighborhood || "N/A";
+        document.getElementById("description").innerText = data.description || "No description available.";
+    } else {
+        alert(data.message || "No recommendation found for this Custom ID.");
+    }
+})
+.catch(error => {
+    console.error("Error fetching recommendation:", error);
+    alert("Failed to fetch recommendation. Please try again later.");
+    document.getElementById("loading").style.display = "none";
+});
 
-        if (data.success) {
-            document.getElementById("neighborhood").innerText = data.neighborhood || "N/A";
-            document.getElementById("description").innerText = data.description || "No description available.";
-        } else {
-            alert(data.message || "No recommendation found for this Custom ID.");
-        }
-    })
-    .catch(error => {
-        console.error("Error fetching recommendation:", error);
-        alert("Failed to fetch recommendation. Please try again later.");
-        document.getElementById("loading").style.display = "none";
-    });
-}
 
 
         function submitEmail() {
