@@ -1,96 +1,62 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Neighborhood Recommendation</title>
-    <style>
-        body {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            margin-left: 20%;
-            margin-right: 20%;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        input, button {
-            margin: 5px;
-            padding: 10px;
-        }
-        .spacer {
-            margin-top: 20px;
-        }
-        .loading {
-            display: none;
-            font-size: 14px;
-            color: gray;
-        }
-    </style>
-</head>
 <body>
     <div class="container">
         <h1>Find Your Recommended Neighborhood</h1>
-        
+
         <label for="customId">Enter Your Custom ID:</label>
         <input type="text" id="customId" required />
-        
+
         <button onclick="fetchRecommendation()">Get Recommendation</button>
-        
+
         <p class="loading" id="loading">Fetching recommendation...</p>
-        
+
         <h2>Recommendation:</h2>
         <p><strong>Neighborhood:</strong> <span id="neighborhood">N/A</span></p>
         <p><strong>Description:</strong> <span id="description">N/A</span></p>
-        
+
         <div class="spacer"></div>
-        
+
         <label for="email">Enter Your Email to Get Full List:</label>
         <input type="email" id="email" required />
-        
+
         <button onclick="submitEmail()">Submit</button>
     </div>
-    
+
+    <!-- JavaScript placed here -->
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbyMIXAInUQO7wYxWSWFmgA6iJpa7Lth-umoCvD0Eiu66MV0EfJe6aUN94mlS-btHHLD/exec";
-
         function fetchRecommendation() {
-    var customId = document.getElementById("customId").value.trim();
-    if (!customId) {
-        alert("Please enter a valid Custom ID.");
-        return;
-    }
+            var customId = document.getElementById("customId").value.trim();
+            if (!customId) {
+                alert("Please enter a valid Custom ID.");
+                return;
+            }
 
-    document.getElementById("loading").style.display = "block";
+            document.getElementById("loading").style.display = "block";
 
-    var scriptUrl = "https://script.google.com/macros/s/AKfycbyMIXAInUQO7wYxWSWFmgA6iJpa7Lth-umoCvD0Eiu66MV0EfJe6aUN94mlS-btHHLD/exec?action=getRecommendation&customId=" + encodeURIComponent(customId);
+            var scriptUrl = "https://script.google.com/macros/s/AKfycbyMIXAInUQO7wYxWSWFmgA6iJpa7Lth-umoCvD0Eiu66MV0EfJe6aUN94mlS-btHHLD/exec?action=getRecommendation&customId=" + encodeURIComponent(customId);
 
-    fetch(scriptUrl, {
-    method: "GET",
-    headers: {
-        "Content-Type": "application/json"
-    }
-})
-.then(response => response.json())
-.then(data => {
-    document.getElementById("loading").style.display = "none";
-    
-    if (data.success) {
-        document.getElementById("neighborhood").innerText = data.neighborhood || "N/A";
-        document.getElementById("description").innerText = data.description || "No description available.";
-    } else {
-        alert(data.message || "No recommendation found for this Custom ID.");
-    }
-})
-.catch(error => {
-    console.error("Error fetching recommendation:", error);
-    alert("Failed to fetch recommendation. Please try again later.");
-    document.getElementById("loading").style.display = "none";
-});
+            fetch(scriptUrl, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("loading").style.display = "none";
 
-
+                if (data.success) {
+                    document.getElementById("neighborhood").innerText = data.neighborhood || "N/A";
+                    document.getElementById("description").innerText = data.description || "No description available.";
+                } else {
+                    alert(data.message || "No recommendation found for this Custom ID.");
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching recommendation:", error);
+                alert("Failed to fetch recommendation. Please try again later.");
+                document.getElementById("loading").style.display = "none";
+            });
+        }
 
         function submitEmail() {
             var email = document.getElementById("email").value.trim();
